@@ -3,7 +3,3 @@
 .vscode/
 venv/
 .ipynb_checkpoints/
-
-# vivado
-methylphenidate_vivado/methylphenidate_vivado.xpr
-methylphenidate_vivado/methylphenidate_vivado.cache/
