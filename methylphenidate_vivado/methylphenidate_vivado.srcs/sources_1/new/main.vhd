@@ -28,7 +28,6 @@ architecture Behavioral of main is
         layer5_out_1_ap_vld : OUT STD_LOGIC );
     end component medikinet;
 
-
     signal state : std_logic := '0';
 
     -- Signals for medikinet instantiation
@@ -38,10 +37,16 @@ architecture Behavioral of main is
     signal layer5_out_0 : std_logic_vector(15 downto 0);
     signal layer5_out_1 : std_logic_vector(15 downto 0);
 
-    -- Input values in decimal - easy to edit!
-    -- 65536 max, 32768 half
-    constant INPUT_HIGH : integer := -512;     -- Upper 16 bits (31 downto 16)
-    constant INPUT_LOW  : integer := 1024;     -- Lower 16 bits (15 downto 0)
+    -- Fixed-point parameters: <16,6> means 10 fractional bits
+    constant FRAC_BITS : integer := 10;
+    constant SCALE     : real    := 2.0 ** FRAC_BITS;  -- 1024.0
+    -- Function to convert real to fixed<16,6>
+    function to_fixed(x : real) return std_logic_vector is
+        variable scaled : integer;
+    begin
+        scaled := integer(x * SCALE);
+        return std_logic_vector(to_signed(scaled, 16));
+    end function;
 
 begin
 
@@ -55,8 +60,7 @@ begin
             ap_idle     => ap_idle,
             ap_ready    => ap_ready,
             przeInput_ap_vld => '1',      -- Hardwired to '1' as requested
-            przeInput   => std_logic_vector(to_signed(INPUT_HIGH, 16))
-                            & std_logic_vector(to_signed(INPUT_LOW, 16)),
+            przeInput   => to_fixed(-1.0) & to_fixed(-0.5),
             layer5_out_0 => layer5_out_0,
             layer5_out_0_ap_vld => open,
             layer5_out_1 => layer5_out_1,
