@@ -5,15 +5,63 @@ use IEEE.NUMERIC_STD.ALL;
 entity main is
   Port (
     CLK : in std_logic;
-    LED : out std_logic_vector(3 downto 0)
+    LED : out std_logic_vector(3 downto 0);
+    LED0_B : out std_logic;
+    LED0_R : out std_logic
   );
 end main;
 
 architecture Behavioral of main is
 
+    component medikinet is port (
+        ap_clk : IN STD_LOGIC;
+        ap_rst : IN STD_LOGIC;
+        ap_start : IN STD_LOGIC;
+        ap_done : OUT STD_LOGIC;
+        ap_idle : OUT STD_LOGIC;
+        ap_ready : OUT STD_LOGIC;
+        przeInput_ap_vld : IN STD_LOGIC;
+        przeInput : IN STD_LOGIC_VECTOR (31 downto 0);
+        layer5_out_0 : OUT STD_LOGIC_VECTOR (15 downto 0);
+        layer5_out_0_ap_vld : OUT STD_LOGIC;
+        layer5_out_1 : OUT STD_LOGIC_VECTOR (15 downto 0);
+        layer5_out_1_ap_vld : OUT STD_LOGIC );
+    end component medikinet;
+
+
     signal state : std_logic := '0';
 
+    -- Signals for medikinet instantiation
+    signal ap_done : std_logic;
+    signal ap_idle : std_logic;
+    signal ap_ready : std_logic;
+    signal layer5_out_0 : std_logic_vector(15 downto 0);
+    signal layer5_out_1 : std_logic_vector(15 downto 0);
+
+    -- Input values in decimal - easy to edit!
+    -- 65536 max, 32768 half
+    constant INPUT_HIGH : integer := -512;     -- Upper 16 bits (31 downto 16)
+    constant INPUT_LOW  : integer := 1024;     -- Lower 16 bits (15 downto 0)
+
 begin
+
+    -- Medikinet instantiation
+    medikinet_inst : medikinet
+        port map (
+            ap_clk      => CLK,
+            ap_rst      => '0',           -- No reset provided, tied to '0'
+            ap_start    => state,         -- Use blink state to trigger starts
+            ap_done     => ap_done,
+            ap_idle     => ap_idle,
+            ap_ready    => ap_ready,
+            przeInput_ap_vld => '1',      -- Hardwired to '1' as requested
+            przeInput   => std_logic_vector(to_signed(INPUT_HIGH, 16))
+                            & std_logic_vector(to_signed(INPUT_LOW, 16)),
+            layer5_out_0 => layer5_out_0,
+            layer5_out_0_ap_vld => open,
+            layer5_out_1 => layer5_out_1,
+            layer5_out_1_ap_vld => open
+        );
 
     blink : process(CLK) begin
         if(rising_edge(CLK)) then
@@ -22,7 +70,12 @@ begin
             state <= state;
         end if;
     end process blink;
-    
+
+    -- LED assignments
     LED(0) <= state;
-    
+    LED(1) <= ap_done;
+
+    LED0_R <= '1' when signed(layer5_out_0) > signed(layer5_out_1) else '0';
+    LED0_B <= '1' when signed(layer5_out_1) > signed(layer5_out_0) else '0';
+
 end Behavioral;
