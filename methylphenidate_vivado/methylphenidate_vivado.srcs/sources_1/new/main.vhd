@@ -97,7 +97,7 @@ begin
     point_switching : process(clk) begin
         if rising_edge(clk) and tick_1s = '1' then
             if ap_done = '1' then
-                last_point_idx <= i;
+                last_point_idx <= point_idx;
 
                 ap_start <= '1';
                 if point_idx = 3 then
