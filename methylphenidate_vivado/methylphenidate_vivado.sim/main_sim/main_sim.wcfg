@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="451.834 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,965.835 ns"></ZoomEndTime>
-      <Cursor1Time time="704.167 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="3,765.001 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="174"></NameColumnWidth>
-      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
+   <WVObjectSize size="15" />
    <wvobject type="logic" fp_name="/main/CLK">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -66,5 +66,17 @@
    <wvobject type="logic" fp_name="/main/ap_start">
       <obj_property name="ElementShortName">ap_start</obj_property>
       <obj_property name="ObjectShortName">ap_start</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/main/i">
+      <obj_property name="ElementShortName">i</obj_property>
+      <obj_property name="ObjectShortName">i</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/main/last_i">
+      <obj_property name="ElementShortName">last_i</obj_property>
+      <obj_property name="ObjectShortName">last_i</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/main/prescaler">
+      <obj_property name="ElementShortName">prescaler</obj_property>
+      <obj_property name="ObjectShortName">prescaler</obj_property>
    </wvobject>
 </wave_config>

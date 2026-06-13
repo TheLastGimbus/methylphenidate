@@ -38,6 +38,13 @@ architecture Behavioral of main is
     signal layer5_out_0 : std_logic_vector(15 downto 0);
     signal layer5_out_1 : std_logic_vector(15 downto 0);
 
+    -- 10 ns period => 100 MHz => 100_000_000 cycles per second
+    -- constant SEC_CYCLES : natural := 100_000_000;
+    constant SEC_CYCLES : natural := 100_000_000;
+
+    signal prescaler : natural range 0 to SEC_CYCLES - 1 := 0;
+    signal tick_1s   : std_logic := '0';
+
     -- Fixed-point parameters: <16,6> means 10 fractional bits
     constant FRAC_BITS : integer := 10;
     constant SCALE     : real    := 2.0 ** FRAC_BITS;  -- 1024.0
@@ -78,8 +85,21 @@ begin
             layer5_out_1_ap_vld => open
         );
 
-    timer : process(clk) begin
+    prescaler_proc : process(clk)
+    begin
         if rising_edge(clk) then
+            if prescaler = SEC_CYCLES - 1 then
+                prescaler <= 0;
+                tick_1s   <= '1';
+            else
+                prescaler <= prescaler + 1;
+                tick_1s   <= '0';
+            end if;
+        end if;
+    end process prescaler_proc;
+
+    timer : process(clk) begin
+        if rising_edge(clk) and tick_1s = '1' then
             if ap_done = '1' then
                 last_i <= i;
 
