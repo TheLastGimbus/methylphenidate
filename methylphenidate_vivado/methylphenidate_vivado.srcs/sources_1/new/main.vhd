@@ -28,9 +28,7 @@ architecture Behavioral of main is
         layer5_out_1_ap_vld : OUT STD_LOGIC );
     end component medikinet;
 
-    signal state : std_logic := '0';
-
-    -- Signals for medikinet instantiation
+    -- Signals for the network
     signal ap_done : std_logic;
     signal ap_idle : std_logic;
     signal ap_ready : std_logic;
@@ -38,17 +36,10 @@ architecture Behavioral of main is
     signal layer5_out_0 : std_logic_vector(15 downto 0);
     signal layer5_out_1 : std_logic_vector(15 downto 0);
 
-    -- 10 ns period => 100 MHz => 100_000_000 cycles per second
-    -- constant SEC_CYCLES : natural := 100_000_000;
-    constant SEC_CYCLES : natural := 100_000_000;
-
-    signal prescaler : natural range 0 to SEC_CYCLES - 1 := 0;
-    signal tick_1s   : std_logic := '0';
-
+    -- Converting floating point to fixed point that network requires
     -- Fixed-point parameters: <16,6> means 10 fractional bits
     constant FRAC_BITS : integer := 10;
-    constant SCALE     : real    := 2.0 ** FRAC_BITS;  -- 1024.0
-    -- Function to convert real to fixed<16,6>
+    constant SCALE     : real    := 2.0 ** FRAC_BITS;
     function to_fixed(x : real) return std_logic_vector is
         variable scaled : integer;
     begin
@@ -56,17 +47,22 @@ architecture Behavioral of main is
         return std_logic_vector(to_signed(scaled, 16));
     end function;
 
+    -- Example points to test
     type t_point_arr is array (0 to 3) of std_logic_vector(31 downto 0);
-    constant P_ARRAY : t_point_arr := (
+    constant points_array : t_point_arr := (
         to_fixed(-0.5) & to_fixed( 0.5),
         to_fixed( 0.5) & to_fixed( 0.5),
         to_fixed(-0.5) & to_fixed(-0.5),
         to_fixed( 0.5) & to_fixed(-0.5)
     );
+    signal network_input : std_logic_vector(31 downto 0);
+    signal point_idx     : integer range 0 to 3 := 0;
+    signal last_point_idx : integer range 0 to 3 := 3;
 
-    signal nn_in : std_logic_vector(31 downto 0);
-    signal i     : integer range 0 to 3 := 0;
-    signal last_i : integer range 0 to 3 := 3;
+    -- Prescaler to slow down the point switching so it's visible with the eye
+    constant SEC_CYCLES : natural := 100_000_000;
+    signal prescaler : natural range 0 to SEC_CYCLES - 1 := 0;
+    signal tick_1s   : std_logic := '0';
 
 begin
     medikinet_inst : medikinet
@@ -78,7 +74,7 @@ begin
             ap_idle     => ap_idle,
             ap_ready    => ap_ready,
             przeInput_ap_vld => '1',
-            przeInput   => nn_in,
+            przeInput   => network_input,
             layer5_out_0 => layer5_out_0,
             layer5_out_0_ap_vld => open,
             layer5_out_1 => layer5_out_1,
@@ -98,27 +94,27 @@ begin
         end if;
     end process prescaler_proc;
 
-    timer : process(clk) begin
+    point_switching : process(clk) begin
         if rising_edge(clk) and tick_1s = '1' then
             if ap_done = '1' then
-                last_i <= i;
+                last_point_idx <= i;
 
                 ap_start <= '1';
-                if i = 3 then
-                    i <= 0;
+                if point_idx = 3 then
+                    point_idx <= 0;
                 else
-                    i <= i + 1;
+                    point_idx <= point_idx + 1;
                 end if;
             else
                 ap_start <= '0';
             end if;
         end if;
-    end process;
+    end process point_switching;
 
-    nn_in <= P_ARRAY(i);
+    network_input <= points_array(point_idx);
 
-    LED(0) <= '1' when (last_i mod 2) = 1 else '0';
-    LED(1) <= '1' when last_i >= 2 else '0';
+    LED(0) <= '1' when (last_point_idx mod 2) = 1 else '0';
+    LED(1) <= '1' when last_point_idx >= 2 else '0';
 
     LED0_R <= '1' when signed(layer5_out_0) > signed(layer5_out_1) else '0';
     LED0_B <= '1' when signed(layer5_out_1) > signed(layer5_out_0) else '0';
