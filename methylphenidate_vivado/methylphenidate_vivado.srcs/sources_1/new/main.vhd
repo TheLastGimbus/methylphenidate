@@ -34,6 +34,7 @@ architecture Behavioral of main is
     signal ap_done : std_logic;
     signal ap_idle : std_logic;
     signal ap_ready : std_logic;
+    signal ap_start : std_logic := '1';
     signal layer5_out_0 : std_logic_vector(15 downto 0);
     signal layer5_out_1 : std_logic_vector(15 downto 0);
 
@@ -48,36 +49,56 @@ architecture Behavioral of main is
         return std_logic_vector(to_signed(scaled, 16));
     end function;
 
-begin
+    type t_point_arr is array (0 to 3) of std_logic_vector(31 downto 0);
+    constant P_ARRAY : t_point_arr := (
+        to_fixed(-0.5) & to_fixed( 0.5),
+        to_fixed( 0.5) & to_fixed( 0.5),
+        to_fixed(-0.5) & to_fixed(-0.5),
+        to_fixed( 0.5) & to_fixed(-0.5)
+    );
 
-    -- Medikinet instantiation
+    signal nn_in : std_logic_vector(31 downto 0);
+    signal i     : integer range 0 to 3 := 0;
+    signal last_i : integer range 0 to 3 := 3;
+
+begin
     medikinet_inst : medikinet
         port map (
             ap_clk      => CLK,
-            ap_rst      => '0',           -- No reset provided, tied to '0'
-            ap_start    => state,         -- Use blink state to trigger starts
+            ap_rst      => '0',
+            ap_start    => ap_start,
             ap_done     => ap_done,
             ap_idle     => ap_idle,
             ap_ready    => ap_ready,
-            przeInput_ap_vld => '1',      -- Hardwired to '1' as requested
-            przeInput   => to_fixed(-1.0) & to_fixed(-0.5),
+            przeInput_ap_vld => '1',
+            przeInput   => nn_in,
             layer5_out_0 => layer5_out_0,
             layer5_out_0_ap_vld => open,
             layer5_out_1 => layer5_out_1,
             layer5_out_1_ap_vld => open
         );
 
-    blink : process(CLK) begin
-        if(rising_edge(CLK)) then
-            state <= not state;
-        else
-            state <= state;
-        end if;
-    end process blink;
+    timer : process(clk) begin
+        if rising_edge(clk) then
+            if ap_done = '1' then
+                last_i <= i;
 
-    -- LED assignments
-    LED(0) <= state;
-    LED(1) <= ap_done;
+                ap_start <= '1';
+                if i = 3 then
+                    i <= 0;
+                else
+                    i <= i + 1;
+                end if;
+            else
+                ap_start <= '0';
+            end if;
+        end if;
+    end process;
+
+    nn_in <= P_ARRAY(i);
+
+    LED(0) <= '1' when (last_i mod 2) = 1 else '0';
+    LED(1) <= '1' when last_i >= 2 else '0';
 
     LED0_R <= '1' when signed(layer5_out_0) > signed(layer5_out_1) else '0';
     LED0_B <= '1' when signed(layer5_out_1) > signed(layer5_out_0) else '0';
