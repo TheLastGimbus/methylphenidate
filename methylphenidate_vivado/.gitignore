@@ -15,3 +15,12 @@ methylphenidate_vivado.srcs/sources_1/new/medikinet/medikinet_prj/solution1/*
 !methylphenidate_vivado.srcs/sources_1/new/medikinet/medikinet_prj/solution1/syn/
 methylphenidate_vivado.srcs/sources_1/new/medikinet/medikinet_prj/solution1/syn/*
 !methylphenidate_vivado.srcs/sources_1/new/medikinet/medikinet_prj/solution1/syn/vhdl
+
+methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/*
+!methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/
+methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/*
+!methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/solution1/
+methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/solution1/*
+!methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/solution1/syn/
+methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/solution1/syn/*
+!methylphenidate_vivado.srcs/sources_1/new/medikinet_cr/medikinet_cr_prj/solution1/syn/vhdl

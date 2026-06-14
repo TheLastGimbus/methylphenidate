@@ -11,25 +11,29 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,765.001 ns"></ZoomEndTime>
-      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+      <ZoomEndTime time="527.001 ns"></ZoomEndTime>
+      <Cursor1Time time="145.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="174"></NameColumnWidth>
-      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+      <ValueColumnWidth column_width="68"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="8" />
    <wvobject type="logic" fp_name="/main/CLK">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/main/LED">
-      <obj_property name="ElementShortName">LED[3:0]</obj_property>
-      <obj_property name="ObjectShortName">LED[3:0]</obj_property>
+   <wvobject type="logic" fp_name="/main/ap_start">
+      <obj_property name="ElementShortName">ap_start</obj_property>
+      <obj_property name="ObjectShortName">ap_start</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/main/state">
-      <obj_property name="ElementShortName">state</obj_property>
-      <obj_property name="ObjectShortName">state</obj_property>
+   <wvobject type="logic" fp_name="/main/ap_done">
+      <obj_property name="ElementShortName">ap_done</obj_property>
+      <obj_property name="ObjectShortName">ap_done</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/main/medikinet_inst/przeInput">
+      <obj_property name="ElementShortName">przeInput[31:0]</obj_property>
+      <obj_property name="ObjectShortName">przeInput[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/main/layer5_out_0">
       <obj_property name="ElementShortName">layer5_out_0[15:0]</obj_property>
@@ -39,44 +43,16 @@
       <obj_property name="ElementShortName">layer5_out_1[15:0]</obj_property>
       <obj_property name="ObjectShortName">layer5_out_1[15:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/main/medikinet_inst/przeInput">
-      <obj_property name="ElementShortName">przeInput[31:0]</obj_property>
-      <obj_property name="ObjectShortName">przeInput[31:0]</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/main/LED0_B">
       <obj_property name="ElementShortName">LED0_B</obj_property>
       <obj_property name="ObjectShortName">LED0_B</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/main/LED0_R">
       <obj_property name="ElementShortName">LED0_R</obj_property>
       <obj_property name="ObjectShortName">LED0_R</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/main/ap_done">
-      <obj_property name="ElementShortName">ap_done</obj_property>
-      <obj_property name="ObjectShortName">ap_done</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/main/ap_ready">
-      <obj_property name="ElementShortName">ap_ready</obj_property>
-      <obj_property name="ObjectShortName">ap_ready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/main/ap_idle">
-      <obj_property name="ElementShortName">ap_idle</obj_property>
-      <obj_property name="ObjectShortName">ap_idle</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/main/ap_start">
-      <obj_property name="ElementShortName">ap_start</obj_property>
-      <obj_property name="ObjectShortName">ap_start</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/main/i">
-      <obj_property name="ElementShortName">i</obj_property>
-      <obj_property name="ObjectShortName">i</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/main/last_i">
-      <obj_property name="ElementShortName">last_i</obj_property>
-      <obj_property name="ObjectShortName">last_i</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/main/prescaler">
-      <obj_property name="ElementShortName">prescaler</obj_property>
-      <obj_property name="ObjectShortName">prescaler</obj_property>
+      <obj_property name="CustomSignalColor">#FFA500</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
    </wvobject>
 </wave_config>
